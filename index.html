@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cerjay Gorres — Virtual Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0A0A0A;
+  --cream:#F5F0E8;
+  --gold:#C8A96E;
+  --gold-dim:rgba(200,169,110,0.15);
+  --white:#FFFFFF;
+  --muted:rgba(245,240,232,0.45);
+  --border:rgba(245,240,232,0.1);
+  --green:#2D6A4F;
+  --green-bg:rgba(45,106,79,0.15);
+}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--cream);
+  line-height:1.7;
+  overflow-x:hidden;
+  cursor:auto;
+}
+a,button{cursor:pointer;}
+
+/* GRADIENT TEXT */
+.grad-text{
+  background:linear-gradient(180deg,#6B7280 0%,#F5F0E8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.5rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+  mix-blend-mode:normal;
+}
+nav::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,10,10,0.9),transparent);
+  pointer-events:none;
+}
+.nav-logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;
+  color:var(--cream);letter-spacing:0.05em;text-transform:uppercase;
+  text-decoration:none;position:relative;z-index:1;
+}
+.nav-links{display:flex;gap:2.5rem;list-style:none;position:relative;z-index:1;}
+.nav-links a{
+  font-size:12px;color:var(--muted);text-decoration:none;
+  font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--cream);}
+
+/* AVAILABLE BADGE */
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green-bg);border:1px solid rgba(45,106,79,0.4);
+  color:#5CB882;font-size:11px;font-weight:500;text-transform:uppercase;
+  letter-spacing:0.1em;padding:6px 14px;border-radius:100px;
+  position:relative;z-index:1;
+}
+.badge-dot{
+  width:6px;height:6px;background:#5CB882;border-radius:50%;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(92,184,130,0.4);}50%{opacity:0.7;box-shadow:0 0 0 4px rgba(92,184,130,0);}}
+
+/* HERO */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:space-between;padding:0 2rem;
+  position:relative;overflow:hidden;
+}
+.hero-top{
+  padding-top:7rem;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:relative;z-index:10;
+}
+.hero-heading-wrap{
+  position:relative;z-index:6;
+  margin:0;
+  display:flex;flex-direction:column;
+  line-height:0.85;
+}
+.hero-h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(4.5rem,17vw,18rem);
+  font-weight:800;
+  letter-spacing:-0.03em;text-transform:uppercase;
+  display:block;width:100%;
+  transform:translateY(110%);
+  animation:slideUp 1s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+}
+.hero-h1.line2{
+  animation-delay:0.32s;
+}
+@keyframes slideUp{to{transform:translateY(0);}}
+.hero-bottom{
+  padding-bottom:2.5rem;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  opacity:0;animation:fadeUp 0.8s ease 0.9s forwards;
+  position:relative;z-index:10;
+}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}from{opacity:0;transform:translateY(20px);}}
+.hero-desc{
+  font-size:clamp(0.75rem,1.1vw,0.95rem);color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;
+  line-height:1.6;max-width:200px;font-weight:300;
+}
+
+/* CG circle — centered between the two heading lines */
+.hero-center{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:8;
+  display:flex;flex-direction:column;align-items:center;
+  pointer-events:none;
+  margin-top:1rem;
+}
+.cg-ring-outer{
+  width:clamp(180px,22vw,300px);height:clamp(180px,22vw,300px);
+  border-radius:50%;border:1px solid rgba(200,169,110,0.18);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.cg-ring-outer::before{
+  content:'';position:absolute;inset:-20px;
+  border-radius:50%;border:1px solid rgba(200,169,110,0.06);
+}
+.cg-ring-inner{
+  width:70%;height:70%;
+  border-radius:50%;border:1px solid rgba(200,169,110,0.25);
+  background:radial-gradient(circle at 40% 35%,rgba(200,169,110,0.18) 0%,rgba(10,10,10,0.95) 70%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;
+}
+.cg-initials{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(1.4rem,3.5vw,4rem);
+  color:rgba(200,169,110,0.6);letter-spacing:0.05em;
+  line-height:1;
+}
+.cg-label{
+  font-size:clamp(7px,0.9vw,11px);
+  color:rgba(245,240,232,0.25);letter-spacing:0.2em;
+  text-transform:uppercase;
+}
+.hero-stats{
+  display:flex;gap:10px;margin-top:clamp(8px,1.5vw,18px);
+}
+.hero-stat{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(200,169,110,0.15);
+  border-radius:10px;padding:8px 14px;text-align:center;
+}
+.hero-stat-num{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(0.9rem,1.8vw,1.4rem);
+  color:var(--gold);display:block;line-height:1.1;
+}
+.hero-stat-lbl{
+  font-size:clamp(7px,0.7vw,9px);
+  color:rgba(245,240,232,0.3);text-transform:uppercase;
+  letter-spacing:0.1em;display:block;margin-top:2px;
+}
+.available-pill{
+  background:rgba(45,106,79,0.12);
+  border:1px solid rgba(45,106,79,0.3);
+  border-radius:20px;padding:5px 12px;
+  font-size:clamp(8px,0.8vw,10px);color:#5CB882;
+  text-transform:uppercase;letter-spacing:0.1em;
+  display:flex;align-items:center;gap:5px;
+  margin-top:8px;
+}
+
+/* BG CIRCLES */
+.hero-circle{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  border:1px solid var(--border);border-radius:50%;
+  pointer-events:none;
+  margin-top:1rem;
+}
+.hero-circle.c1{width:clamp(260px,34vw,500px);height:clamp(260px,34vw,500px);}
+.hero-circle.c2{width:clamp(380px,50vw,740px);height:clamp(380px,50vw,740px);border-color:rgba(245,240,232,0.04);}
+
+/* BTN */
+.btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#1a0a00 0%,#8B5200 40%,#C8A96E 100%);
+  color:var(--white);
+  font-family:'Syne',sans-serif;font-weight:700;font-size:12px;
+  text-transform:uppercase;letter-spacing:0.12em;
+  padding:14px 32px;border-radius:100px;
+  text-decoration:none;border:none;cursor:pointer;
+  box-shadow:0 0 20px rgba(200,169,110,0.2),inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:box-shadow 0.3s,transform 0.2s;
+}
+.btn:hover{box-shadow:0 0 40px rgba(200,169,110,0.4),inset 0 1px 0 rgba(255,255,255,0.2);transform:translateY(-1px);}
+
+/* MARQUEE - auto-animating */
+.marquee-section{padding:5rem 0 3rem;overflow:hidden;}
+.marquee-track{display:flex;gap:12px;margin-bottom:12px;will-change:transform;}
+.marquee-track.left{animation:scrollLeft 30s linear infinite;}
+.marquee-track.right{animation:scrollRight 30s linear infinite;}
+@keyframes scrollLeft{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes scrollRight{0%{transform:translateX(-50%);}100%{transform:translateX(0);}}
+.marquee-track:hover{animation-play-state:paused;}
+
+/* ABOUT */
+.about{
+  min-height:150vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:6rem 4rem;position:relative;text-align:center;
+}
+.about-inner{
+  position:sticky;top:20vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding-bottom:4rem;
+}
+.about-heading{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(4rem,12vw,11rem);
+  font-weight:800;text-transform:uppercase;
+  letter-spacing:-0.03em;line-height:0.9;
+  margin-bottom:3rem;
+}
+.about-text{
+  font-size:clamp(1rem,1.8vw,1.3rem);
+  max-width:600px;
+  line-height:1.9;font-weight:300;margin-bottom:3rem;
+}
+.about-text .char{
+  display:inline;
+  color:rgba(245,240,232,0.15);
+  transition:color 0.08s;
+}
+.about-deco{
+  position:absolute;pointer-events:none;
+}
+.about-deco-tl{top:8%;left:4%;width:clamp(80px,10vw,160px);opacity:0.5;}
+.about-deco-tr{top:8%;right:4%;width:clamp(80px,10vw,160px);opacity:0.5;}
+.about-deco-bl{bottom:8%;left:6%;width:clamp(60px,8vw,130px);opacity:0.4;}
+.about-deco-br{bottom:8%;right:6%;width:clamp(70px,9vw,140px);opacity:0.4;}
+
+/* SERVICES */
+.services{
+  background:var(--cream);color:#0A0A0A;
+  border-radius:50px 50px 0 0;
+  padding:5rem 4rem;
+}
+.services-heading{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3rem,10vw,10rem);
+  font-weight:800;text-transform:uppercase;
+  letter-spacing:-0.03em;text-align:center;
+  margin-bottom:3rem;color:#0A0A0A;
+}
+.services-list{max-width:960px;margin:0 auto;}
+.service-item{
+  display:flex;align-items:flex-start;gap:2rem;
+  padding:2rem 0;border-bottom:1px solid rgba(10,10,10,0.12);
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.6s ease,transform 0.6s ease;
+}
+.service-item.visible{opacity:1;transform:translateY(0);}
+.service-num{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.5rem,8vw,7rem);
+  font-weight:800;color:rgba(10,10,10,0.12);
+  line-height:1;flex-shrink:0;width:clamp(80px,10vw,140px);
+}
+.service-content{}
+.service-name{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(1rem,2vw,1.8rem);
+  text-transform:uppercase;letter-spacing:0.02em;
+  margin-bottom:0.5rem;
+}
+.service-desc{
+  font-size:clamp(0.85rem,1.3vw,1.05rem);
+  color:rgba(10,10,10,0.55);line-height:1.8;font-weight:300;
+}
+.service-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;}
+.service-tag{
+  font-size:11px;font-weight:500;text-transform:uppercase;
+  letter-spacing:0.08em;padding:4px 12px;
+  border:1px solid rgba(10,10,10,0.2);border-radius:100px;
+  color:rgba(10,10,10,0.5);
+}
+
+/* TOOLS */
+.tools{
+  background:var(--cream);color:#0A0A0A;
+  padding:0 4rem 5rem;
+}
+.tools-inner{max-width:960px;margin:0 auto;}
+.tools-label{
+  font-size:11px;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.12em;color:rgba(10,10,10,0.4);margin-bottom:1.5rem;
+}
+.tools-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.tool-pill{
+  background:rgba(10,10,10,0.06);border:1px solid rgba(10,10,10,0.12);
+  padding:8px 18px;border-radius:100px;
+  font-size:13px;font-weight:500;color:#0A0A0A;
+  transition:background 0.2s,border-color 0.2s;
+}
+.tool-pill:hover{background:rgba(200,169,110,0.15);border-color:rgba(200,169,110,0.4);}
+
+/* PROJECTS */
+.projects{
+  background:var(--bg);
+  border-radius:50px 50px 0 0;
+  margin-top:-40px;padding:5rem 4rem;
+  position:relative;z-index:5;
+}
+.projects-heading{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3rem,10vw,10rem);
+  font-weight:800;text-transform:uppercase;
+  letter-spacing:-0.03em;text-align:center;
+  margin-bottom:4rem;
+}
+.cards-container{position:relative;}
+.card-sticky-wrap{height:85vh;position:relative;}
+.project-card{
+  position:sticky;top:6rem;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  border-radius:40px;padding:2rem;
+  will-change:transform;
+}
+.card-top{
+  display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;
+}
+.card-num{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(2rem,6vw,5rem);
+  color:rgba(245,240,232,0.12);line-height:1;
+}
+.card-meta{flex:1;padding:0 1.5rem;}
+.card-category{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--muted);margin-bottom:4px;
+}
+.card-name{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(1rem,2.5vw,2rem);color:var(--cream);
+}
+.btn-ghost{
+  display:inline-block;
+  border:1.5px solid rgba(245,240,232,0.3);
+  color:var(--cream);font-family:'Syne',sans-serif;
+  font-weight:600;font-size:11px;text-transform:uppercase;
+  letter-spacing:0.1em;padding:10px 24px;border-radius:100px;
+  text-decoration:none;cursor:pointer;
+  transition:background 0.2s,border-color 0.2s;
+}
+.btn-ghost:hover{background:rgba(245,240,232,0.08);border-color:var(--cream);}
+.card-images{display:grid;grid-template-columns:2fr 3fr;gap:12px;}
+.col-left{display:flex;flex-direction:column;gap:12px;}
+.col-left img,.col-right img{
+  width:100%;object-fit:cover;border-radius:24px;
+}
+.col-left img:first-child{height:clamp(120px,14vw,200px);}
+.col-left img:last-child{height:clamp(150px,20vw,300px);}
+.col-right img{height:100%;min-height:clamp(280px,36vw,510px);}
+
+/* CTA */
+.cta-section{
+  background:var(--gold-dim);border-top:1px solid var(--border);
+  padding:8rem 4rem;text-align:center;
+}
+.cta-heading{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(2.5rem,7vw,7rem);
+  text-transform:uppercase;letter-spacing:-0.03em;
+  line-height:0.95;margin-bottom:1.5rem;
+}
+.cta-sub{
+  font-size:1.05rem;color:var(--muted);
+  max-width:500px;margin:0 auto 3rem;line-height:1.8;
+}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{
+  background:var(--bg);padding:2rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border);
+}
+footer p{font-size:13px;color:var(--muted);}
+.foot-links{display:flex;gap:2rem;}
+.foot-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.foot-links a:hover{color:var(--cream);}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* LINE */
+.divider{width:100%;height:1px;background:var(--border);margin:0;}
+
+@media(max-width:768px){
+  nav{padding:1.2rem 1.5rem;}
+  .nav-links{gap:1.2rem;}
+  .hero{padding:0 1rem;}
+  .hero-top{flex-direction:column;gap:1rem;}
+  .hero-bottom{flex-direction:column;gap:1.5rem;align-items:flex-start;}
+  .hero-h1{font-size:clamp(4rem,22vw,8rem);}
+  .hero-center{margin-top:0.5rem;}
+  .about,.services,.tools,.projects,.cta-section{padding-left:1.5rem;padding-right:1.5rem;}
+  .about-deco{display:none;}
+  footer{flex-direction:column;gap:1rem;text-align:center;}
+  .card-images{grid-template-columns:1fr;}
+  .col-right{display:none;}
+  .services{border-radius:30px 30px 0 0;}
+  .projects{border-radius:30px 30px 0 0;}
+  .card-top{flex-wrap:wrap;}
+  .btn-ghost{font-size:10px;padding:8px 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Cerjay Gorres</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#cta">Hire Me</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-circle c1"></div>
+  <div class="hero-circle c2"></div>
+
+  <div class="hero-top" style="opacity:0;animation:fadeUp 0.8s ease 0.1s forwards;">
+    <div class="badge"><span class="badge-dot"></span> Available for Work</div>
+    <p style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;text-align:right;line-height:1.6;">Virtual Assistant<br>E-Commerce Ops</p>
+  </div>
+
+  <!-- Two-line heading that always fits -->
+  <div class="hero-heading-wrap" style="overflow:hidden;">
+    <span class="hero-h1 grad-text" style="display:block;">Cerjay</span>
+  </div>
+  <div class="hero-heading-wrap" style="overflow:hidden;margin-bottom:0;">
+    <span class="hero-h1 line2 grad-text" style="display:block;">Gorres</span>
+  </div>
+
+  <!-- Centered CG circle — sits between the two lines -->
+  <div class="hero-center" id="portrait">
+    <div class="cg-ring-outer">
+      <div class="cg-ring-inner">
+        <span class="cg-initials">CG</span>
+        <span class="cg-label">Virtual Assistant</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">70%+</span>
+        <span class="hero-stat-lbl">EA Workload</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">2</span>
+        <span class="hero-stat-lbl">Markets</span>
+      </div>
+    </div>
+    <div class="available-pill"><span style="width:5px;height:5px;background:#5CB882;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>Available</div>
+  </div>
+
+  <div class="hero-bottom">
+    <p class="hero-desc">E-commerce VA managing Meta Ads, P&L reports & executive ops across Italy & US markets.</p>
+    <a href="https://mail.google.com/mail/?view=cm&to=cerjay.gorres16@gmail.com" target="_blank" class="btn">Work With Me →</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee-section" id="marquee">
+  <div class="marquee-track left" id="row1"></div>
+  <div class="marquee-track right" id="row2"></div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <img src="https://api.iconify.design/ph/chart-line-up-bold.svg?color=%23C8A96E" class="about-deco about-deco-tl" alt="" aria-hidden="true" style="filter:invert(0);opacity:0.25;"/>
+  <img src="https://api.iconify.design/ph/megaphone-bold.svg?color=%23C8A96E" class="about-deco about-deco-tr" alt="" aria-hidden="true" style="filter:invert(0);opacity:0.25;"/>
+  <img src="https://api.iconify.design/ph/storefront-bold.svg?color=%232D6A4F" class="about-deco about-deco-bl" alt="" aria-hidden="true" style="opacity:0.2;"/>
+  <img src="https://api.iconify.design/ph/currency-dollar-bold.svg?color=%23C8A96E" class="about-deco about-deco-br" alt="" aria-hidden="true" style="opacity:0.2;"/>
+  <div class="about-inner">
+    <h2 class="about-heading grad-text reveal">About Me</h2>
+    <p class="about-text reveal" id="animated-text">
+      With hands-on experience in e-commerce operations, I manage Meta Ads campaigns across multiple regions, maintain daily and monthly P&L reports, and handle 70–80% of a senior Executive Assistant's workload — independently and on time. I don't just complete tasks. I keep businesses running at full speed.
+    </p>
+    <a href="https://mail.google.com/mail/?view=cm&to=cerjay.gorres16@gmail.com" target="_blank" class="btn reveal">Let's Talk →</a>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <h2 class="services-heading">Services</h2>
+  <div class="services-list">
+    <div class="service-item">
+      <div class="service-num">01</div>
+      <div class="service-content">
+        <div class="service-name">Financial Reporting & P&L</div>
+        <p class="service-desc">Accurate, real-time daily and monthly P&L tracking so you always know exactly where your business stands — no guessing, no delays.</p>
+        <div class="service-tags">
+          <span class="service-tag">Shopify Italy & US</span>
+          <span class="service-tag">Amazon</span>
+          <span class="service-tag">Google Sheets</span>
+          <span class="service-tag">Data Extraction</span>
+        </div>
+      </div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">02</div>
+      <div class="service-content">
+        <div class="service-name">Paid Media Management</div>
+        <p class="service-desc">Multi-regional Meta Ads campaigns managed daily — no missed launches, no budget waste, consistent performance tracking across markets.</p>
+        <div class="service-tags">
+          <span class="service-tag">Facebook Ads</span>
+          <span class="service-tag">TikTok Ads</span>
+          <span class="service-tag">Italy & US Markets</span>
+          <span class="service-tag">Campaign Ops</span>
+        </div>
+      </div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">03</div>
+      <div class="service-content">
+        <div class="service-name">Executive & Admin Support</div>
+        <p class="service-desc">Full-cycle admin support — task coordination, inbox management, and operational continuity — so your senior team focuses on decisions, not tasks.</p>
+        <div class="service-tags">
+          <span class="service-tag">Slack</span>
+          <span class="service-tag">ClickUp</span>
+          <span class="service-tag">Notion</span>
+          <span class="service-tag">Task Coordination</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="tools" id="tools">
+  <div class="tools-inner">
+    <p class="tools-label">Tech Stack — Tools I use daily</p>
+    <div class="tools-grid">
+      <span class="tool-pill">Meta Ads Manager</span>
+      <span class="tool-pill">TikTok Ads</span>
+      <span class="tool-pill">Shopify</span>
+      <span class="tool-pill">Amazon Seller Central</span>
+      <span class="tool-pill">Google Sheets</span>
+      <span class="tool-pill">Google Workspace</span>
+      <span class="tool-pill">Slack</span>
+      <span class="tool-pill">ClickUp</span>
+      <span class="tool-pill">Notion</span>
+      <span class="tool-pill">Adobe Lightroom</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS / EXPERIENCE -->
+<section class="projects" id="projects">
+  <h2 class="projects-heading grad-text reveal">Experience</h2>
+  <div class="cards-container" id="cards-container">
+
+    <!-- Card 1 -->
+    <div class="card-sticky-wrap">
+      <div class="project-card" id="card-0">
+        <div class="card-top">
+          <div class="card-num">01</div>
+          <div class="card-meta">
+            <div class="card-category">Current Role · March 2026 – Present</div>
+            <div class="card-name">Men's Skincare E-Commerce Brand</div>
+          </div>
+          <a href="https://mail.google.com/mail/?view=cm&to=cerjay.gorres16@gmail.com" target="_blank" class="btn-ghost">Hire for Similar Work</a>
+        </div>
+        <div class="card-images">
+          <div class="col-left">
+            <div style="background:rgba(200,169,110,0.08);border:1px solid rgba(200,169,110,0.15);border-radius:24px;height:clamp(120px,14vw,200px);display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+              <div style="text-align:center;">
+                <div style="font-family:'Syne',sans-serif;font-size:clamp(1.5rem,4vw,3rem);font-weight:800;color:#C8A96E;line-height:1;">70%</div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:4px;">EA Workload</div>
+              </div>
+            </div>
+            <div style="background:rgba(45,106,79,0.08);border:1px solid rgba(45,106,79,0.2);border-radius:24px;height:clamp(150px,20vw,300px);display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+              <div style="text-align:center;">
+                <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">Daily Tasks</div>
+                <div style="display:flex;flex-direction:column;gap:8px;text-align:left;">
+                  <div style="font-size:12px;color:#5CB882;">✓ P&L Reports</div>
+                  <div style="font-size:12px;color:#5CB882;">✓ Shopify Data</div>
+                  <div style="font-size:12px;color:#5CB882;">✓ Amazon Data</div>
+                  <div style="font-size:12px;color:#5CB882;">✓ Meta Ads</div>
+                  <div style="font-size:12px;color:#5CB882;">✓ Admin Ops</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-right">
+            <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:24px;height:100%;min-height:clamp(280px,36vw,510px);display:flex;align-items:center;justify-content:center;padding:2rem;">
+              <div style="text-align:center;max-width:320px;">
+                <div style="font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.8rem);font-weight:700;color:var(--cream);margin-bottom:1rem;">Subcontractor<br>Executive Assistant Support</div>
+                <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">Managed multi-regional Shopify (Italy & US) and Amazon sales data, daily & monthly P&L reporting, and Meta Ads campaigns — handling the full operational workload of a senior EA independently.</p>
+                <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                  <span style="font-size:11px;border:1px solid var(--border);padding:4px 12px;border-radius:100px;color:var(--muted);">Italy Market</span>
+                  <span style="font-size:11px;border:1px solid var(--border);padding:4px 12px;border-radius:100px;color:var(--muted);">US Market</span>
+                  <span style="font-size:11px;border:1px solid var(--border);padding:4px 12px;border-radius:100px;color:var(--muted);">E-Commerce</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card-sticky-wrap">
+      <div class="project-card" id="card-1">
+        <div class="card-top">
+          <div class="card-num">02</div>
+          <div class="card-meta">
+            <div class="card-category">Service Role · Aug 2025 – Dec 2025</div>
+            <div class="card-name">SizigAddict — Iligan City</div>
+          </div>
+          <a href="https://mail.google.com/mail/?view=cm&to=cerjay.gorres16@gmail.com" target="_blank" class="btn-ghost">Work With Me</a>
+        </div>
+        <div class="card-images">
+          <div class="col-left">
+            <div style="background:rgba(200,169,110,0.06);border:1px solid rgba(200,169,110,0.12);border-radius:24px;height:clamp(120px,14vw,200px);display:flex;align-items:center;justify-content:center;">
+              <div style="text-align:center;padding:1rem;">
+                <div style="font-family:'Syne',sans-serif;font-size:clamp(1.2rem,3vw,2rem);font-weight:800;color:#C8A96E;">Service Crew</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.08em;">Customer Service</div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:24px;height:clamp(150px,20vw,300px);display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+              <div style="text-align:left;">
+                <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">Key Skills Gained</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="font-size:13px;color:var(--cream);">→ High-volume service ops</div>
+                  <div style="font-size:13px;color:var(--cream);">→ Cash handling accuracy</div>
+                  <div style="font-size:13px;color:var(--cream);">→ Team collaboration</div>
+                  <div style="font-size:13px;color:var(--cream);">→ Attention to standards</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-right">
+            <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:24px;height:100%;min-height:clamp(280px,36vw,510px);display:flex;align-items:center;justify-content:center;padding:2rem;">
+              <div style="text-align:center;max-width:320px;">
+                <div style="font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.8rem);font-weight:700;color:var(--cream);margin-bottom:1rem;">Customer Service & Operations</div>
+                <p style="font-size:14px;color:var(--muted);line-height:1.8;">Delivered efficient customer service in a high-volume environment, maintained quality standards, handled cash transactions, and supported smooth daily team operations — building core professional discipline.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card-sticky-wrap">
+      <div class="project-card" id="card-2">
+        <div class="card-top">
+          <div class="card-num">03</div>
+          <div class="card-meta">
+            <div class="card-category">Creative Role · April 2020 – March 2025</div>
+            <div class="card-name">Rhalf Ryan Photography</div>
+          </div>
+          <a href="https://mail.google.com/mail/?view=cm&to=cerjay.gorres16@gmail.com" target="_blank" class="btn-ghost">Work With Me</a>
+        </div>
+        <div class="card-images">
+          <div class="col-left">
+            <div style="background:rgba(200,169,110,0.06);border:1px solid rgba(200,169,110,0.12);border-radius:24px;height:clamp(120px,14vw,200px);display:flex;align-items:center;justify-content:center;">
+              <div style="text-align:center;padding:1rem;">
+                <div style="font-family:'Syne',sans-serif;font-size:clamp(1.5rem,4vw,3rem);font-weight:800;color:#C8A96E;">5 yrs</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.08em;">Photography</div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:24px;height:clamp(150px,20vw,300px);display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+              <div style="text-align:left;">
+                <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">Tools Used</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="font-size:13px;color:var(--cream);">→ Adobe Lightroom</div>
+                  <div style="font-size:13px;color:var(--cream);">→ Photo editing</div>
+                  <div style="font-size:13px;color:var(--cream);">→ Event logistics</div>
+                  <div style="font-size:13px;color:var(--cream);">→ Visual content org</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-right">
+            <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:24px;height:100%;min-height:clamp(280px,36vw,510px);display:flex;align-items:center;justify-content:center;padding:2rem;">
+              <div style="text-align:center;max-width:320px;">
+                <div style="font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.8rem);font-weight:700;color:var(--cream);margin-bottom:1rem;">Assistant Photographer & Editor</div>
+                <p style="font-size:14px;color:var(--muted);line-height:1.8;">Assisted lead photographers across various events, managed equipment and logistics, and edited photo libraries in Adobe Lightroom — developing strong visual attention to detail and creative discipline over 5 years.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <h2 class="cta-heading grad-text reveal">Stop doing<br>everything yourself.</h2>
+  <p class="cta-sub reveal">If you run an e-commerce brand and need a reliable VA who actually shows up — I'm ready to take things off your plate starting this week.</p>
+  <div class="cta-btns reveal">
+    <a href="https://mail.google.com/mail/?view=cm&to=cerjay.gorres16@gmail.com" target="_blank" class="btn">Email Me →</a>
+    <a href="https://wa.me/639853431862" target="_blank" class="btn-ghost" style="border-color:rgba(200,169,110,0.4);color:var(--cream);padding:14px 32px;">WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Cerjay Gorres · Iligan City, Philippines</p>
+  <div class="foot-links">
+    <a href="mailto:cerjay.gorres16@gmail.com">Email</a>
+    <a href="https://wa.me/639853431862" target="_blank">WhatsApp</a>
+  </div>
+</footer>
+
+<script>
+// HERO PORTRAIT MAGNETIC (desktop only)
+const portrait = document.getElementById('portrait');
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{
+    if(!portrait)return;
+    const rect=portrait.getBoundingClientRect();
+    const cx=rect.left+rect.width/2;const cy=rect.top+rect.height/2;
+    const dx=e.clientX-cx;const dy=e.clientY-cy;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<280){
+      const strength=4;
+      portrait.style.transform=`translate(calc(-50% + ${dx/strength}px), calc(-50% + ${dy/strength}px))`;
+      portrait.style.transition='transform 0.3s ease-out';
+    } else {
+      portrait.style.transform='translate(-50%,-50%)';
+      portrait.style.transition='transform 0.6s ease-in-out';
+    }
+  });
+}
+
+// MARQUEE — build cards and duplicate for seamless loop
+const row1Items = [
+  {label:'Meta Ads Manager',icon:'📊',color:'rgba(200,169,110,0.08)'},
+  {label:'Shopify',icon:'🛍️',color:'rgba(45,106,79,0.08)'},
+  {label:'Amazon Seller',icon:'📦',color:'rgba(200,169,110,0.06)'},
+  {label:'P&L Reporting',icon:'💰',color:'rgba(45,106,79,0.06)'},
+  {label:'Google Sheets',icon:'📋',color:'rgba(200,169,110,0.08)'},
+  {label:'TikTok Ads',icon:'🎯',color:'rgba(45,106,79,0.08)'},
+];
+const row2Items = [
+  {label:'Slack',icon:'💬',color:'rgba(200,169,110,0.06)'},
+  {label:'ClickUp',icon:'✅',color:'rgba(45,106,79,0.06)'},
+  {label:'Notion',icon:'📝',color:'rgba(200,169,110,0.08)'},
+  {label:'Executive Support',icon:'⚙️',color:'rgba(45,106,79,0.08)'},
+  {label:'Adobe Lightroom',icon:'🎨',color:'rgba(200,169,110,0.06)'},
+];
+function buildMarqueeCard(item){
+  const d=document.createElement('div');
+  d.style.cssText=`min-width:240px;height:140px;border-radius:16px;border:1px solid rgba(245,240,232,0.08);background:${item.color};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;flex-shrink:0;`;
+  d.innerHTML=`<span style="font-size:1.8rem;">${item.icon}</span><span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:rgba(245,240,232,0.7);text-transform:uppercase;letter-spacing:0.06em;">${item.label}</span>`;
+  return d;
+}
+const r1=document.getElementById('row1');
+const r2=document.getElementById('row2');
+// Duplicate 4x so there's always content visible during animation
+[...row1Items,...row1Items,...row1Items,...row1Items].forEach(i=>r1.appendChild(buildMarqueeCard(i)));
+[...row2Items,...row2Items,...row2Items,...row2Items].forEach(i=>r2.appendChild(buildMarqueeCard(i)));
+
+// SCROLL REVEAL
+const reveals=document.querySelectorAll('.reveal');
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+reveals.forEach(el=>ro.observe(el));
+
+// SERVICES STAGGER
+const serviceItems=document.querySelectorAll('.service-item');
+const so=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx=Array.from(serviceItems).indexOf(e.target);
+      setTimeout(()=>e.target.classList.add('visible'),idx*120);
+    }
+  });
+},{threshold:0.1});
+serviceItems.forEach(el=>so.observe(el));
+
+// ANIMATED TEXT — character highlight based on scroll through the about section
+const textEl=document.getElementById('animated-text');
+if(textEl){
+  const rawText=textEl.textContent.trim();
+  textEl.innerHTML='';
+  [...rawText].forEach(ch=>{
+    const span=document.createElement('span');
+    span.className='char';
+    span.textContent=ch;
+    textEl.appendChild(span);
+  });
+  const charEls=textEl.querySelectorAll('.char');
+  const aboutSection=document.getElementById('about');
+  window.addEventListener('scroll',()=>{
+    const secTop=aboutSection.getBoundingClientRect().top;
+    const secH=aboutSection.offsetHeight;
+    // Start highlighting when section is 20% in view, finish at 70% scrolled through
+    const progress=Math.max(0,Math.min(1,(-secTop+window.innerHeight*0.2)/(secH*0.7)));
+    charEls.forEach((c,i)=>{
+      const t=i/charEls.length;
+      c.style.color=progress>t?'rgba(245,240,232,0.9)':'rgba(245,240,232,0.15)';
+    });
+  },{passive:true});
+}
+
+// STACKING CARDS SCALE
+const cards=document.querySelectorAll('.project-card');
+const totalCards=cards.length;
+window.addEventListener('scroll',()=>{
+  cards.forEach((card,i)=>{
+    const wrap=card.closest('.card-sticky-wrap');
+    const rect=wrap.getBoundingClientRect();
+    const progress=Math.max(0,Math.min(1,-rect.top/(rect.height-window.innerHeight*0.7)));
+    const targetScale=1-(totalCards-1-i)*0.04;
+    const scale=1-(1-targetScale)*Math.min(progress,1);
+    card.style.transform=`scale(${scale}) translateY(${i*28}px)`;
+    card.style.transformOrigin='center top';
+  });
+},{passive:true});
+</script>
+</body>
+</html>
